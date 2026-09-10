@@ -179,3 +179,15 @@ def match_centre(request):
     # Mock data for Arsenal vs Liverpool Match Centre
     context = {}
     return render(request, 'sportsbook/match_centre.html', context)
+
+def live_dashboard(request):
+    return render(request, 'sportsbook/live.html', {})
+
+def team_page(request):
+    return render(request, 'sportsbook/team.html', {})
+
+def player_page(request):
+    return render(request, 'sportsbook/player.html', {})
+
+def my_picks(request):
+    return render(request, 'sportsbook/picks.html', {})

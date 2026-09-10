@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>My Picks Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0a0a; --bg-surface: #141414; --bg-surface-hover: #1f1f1f; --bg-sidebar: #050505;
+      --text-main: #f5f5f5; --text-muted: #8b8b8b; --accent: #e8b923; --border: #222222; --sidebar-width: 260px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Fredoka', sans-serif; display: flex; min-height: 100vh; width: 100%; overflow-x: hidden; }
+    .sidebar { width: var(--sidebar-width); background-color: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 20px 0; position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; z-index: 10; }
+    .sidebar-section { padding: 0 20px; margin-bottom: 30px; }
+    .sidebar-title { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; font-weight: 600; letter-spacing: 0.5px;}
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li { margin-bottom: 8px; }
+    .sidebar-nav a { color: var(--text-main); text-decoration: none; font-size: 1.05rem; display: flex; align-items: center; padding: 12px 14px; border-radius: 12px; transition: all 0.2s; font-weight: 500;}
+    .sidebar-nav a:hover, .sidebar-nav a.active { background-color: var(--bg-surface-hover); color: var(--accent); }
+    .main-content { flex: 1; margin-left: var(--sidebar-width); padding: 40px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 30px; margin-bottom: 30px; }
+    .page-title { font-size: 2rem; font-weight: 800; margin-bottom: 30px; display:flex; align-items:center; gap: 15px; text-transform: uppercase;}
+    .live-dot { display: inline-block; width: 12px; height: 12px; background-color: #ef4444; border-radius: 50%; box-shadow: 0 0 10px #ef4444; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { transform: scale(0.95); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.5; } 100% { transform: scale(0.95); opacity: 1; } }
+    .btn { background: var(--accent); color: #111; padding: 12px 24px; border-radius: 8px; font-weight: 800; text-decoration: none; transition: 0.2s; border:none; cursor:pointer;}
+    .btn:hover { background: #ffd036; transform: scale(1.05);}
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <h3 style="color: var(--text-main); font-size: 1.8rem; font-weight: 700; margin-bottom: 40px; padding: 10px 12px; display:flex; align-items:center; gap:8px;">
+        <div style="width:24px; height:24px; background:var(--accent); border-radius:4px; flex-shrink: 0;"></div> MyVepower
+      </h3>
+      <div class="sidebar-title">Live & Play</div>
+      <ul class="sidebar-nav">
+        <li><a href="/sports/live/">🔴 Live Dashboard</a></li>
+        <li><a href="/sports/picks/">🎯 My Picks</a></li>
+      </ul>
+      <div class="sidebar-title" style="margin-top: 35px;">Sports</div>
+      <ul class="sidebar-nav">
+        <li><a href="/?sport=nfl">🏈 NFL Football</a></li>
+        <li><a href="/?sport=soccer">⚽ Soccer</a></li>
+      </ul>
+      <div class="sidebar-title" style="margin-top: 35px;">AI Tools</div>
+      <ul class="sidebar-nav">
+        <li><a href="/sports/ai/">🤖 MyVepower AI</a></li>
+      </ul>
+      <div class="sidebar-title" style="margin-top: 35px;">Explore</div>
+      <ul class="sidebar-nav">
+        <li><a href="/sports/team/">🛡️ Team Page</a></li>
+        <li><a href="/sports/player/">👤 Player Page</a></li>
+        <li><a href="/squads/">👥 All Squads & Teams</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="main-content"><div class="container" style="max-width:600px;">
+    <div class="page-title">🎯 MY PICKS (SELECTIONS)</div>
+    
+    <div class="card" style="border-color:var(--accent);">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:15px;">
+            <div>
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">⚽ Match Result</div>
+                <div style="font-size:1.2rem; font-weight:700;">Arsenal to Win</div>
+            </div>
+            <div style="color:var(--accent); font-weight:800;">-120</div>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:15px;">
+            <div>
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">🏈 Player Prop</div>
+                <div style="font-size:1.2rem; font-weight:700;">Mahomes Over 285.5 Pass Yds</div>
+            </div>
+            <div style="color:var(--accent); font-weight:800;">-110</div>
+        </div>
+        
+        <div style="margin-top:30px; text-align:center;">
+            <div style="color:var(--text-muted); margin-bottom:15px;">2 Selections</div>
+            <button class="btn" style="width:100%; font-size:1.2rem;">REVIEW PICKS</button>
+        </div>
+    </div>
+  </div></main>
+</body></html>
