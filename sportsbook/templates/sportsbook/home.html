@@ -3,80 +3,96 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BetBuilderAI NFL | Live Sweepstakes Data</title>
-  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>MyVepower | Sweepstakes Command Center</title>
+  
+  <!-- Using Fredoka font as detected on myvepower.com -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg-base: #0a0c14;
-      --bg-surface: #151822;
-      --bg-surface-hover: #1e2230;
-      --bg-sidebar: #0f111a;
+      /* Exact colors from myvepower.com */
+      --bg-base: #0a0a0a; 
+      --bg-surface: #141414; /* Slightly lighter for cards */
+      --bg-surface-hover: #1f1f1f;
+      --bg-sidebar: #050505;
       --text-main: #f5f5f5;
-      --text-muted: #8b92a5;
-      --accent: #4ade80; 
-      --border: #232838;
+      --text-muted: #8b8b8b;
+      --accent: #e8b923; /* MyVepower Gold */
+      --border: #222222;
       --sidebar-width: 260px;
     }
+    
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Red Hat Display', sans-serif; display: flex; min-height: 100vh; overflow-x: hidden; }
+    body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Fredoka', sans-serif; display: flex; min-height: 100vh; overflow-x: hidden; }
     
     /* Sidebar */
     .sidebar { width: var(--sidebar-width); background-color: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 20px 0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; z-index: 10; }
     .sidebar-section { padding: 0 20px; margin-bottom: 30px; }
-    .sidebar-title { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; font-weight: 600; }
+    .sidebar-title { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; font-weight: 600; letter-spacing: 0.5px;}
     .sidebar-nav { list-style: none; }
     .sidebar-nav li { margin-bottom: 8px; }
-    .sidebar-nav a { color: var(--text-main); text-decoration: none; font-size: 1rem; display: flex; align-items: center; padding: 10px 12px; border-radius: 8px; transition: background 0.2s; }
-    .sidebar-nav a:hover, .sidebar-nav a.active { background-color: var(--bg-surface-hover); color: var(--text-main); }
+    .sidebar-nav a { color: var(--text-main); text-decoration: none; font-size: 1.05rem; display: flex; align-items: center; padding: 12px 14px; border-radius: 12px; transition: background 0.2s, color 0.2s; font-weight: 500;}
+    .sidebar-nav a:hover, .sidebar-nav a.active { background-color: var(--bg-surface-hover); color: var(--accent); }
 
     .main-content { flex: 1; margin-left: var(--sidebar-width); display: flex; flex-direction: column; }
     
     /* Ticker */
-    .ticker { background-color: var(--bg-sidebar); border-bottom: 1px solid var(--border); padding: 12px 20px; overflow: hidden; white-space: nowrap; }
+    .ticker { background-color: var(--bg-sidebar); border-bottom: 1px solid var(--border); padding: 14px 20px; overflow: hidden; white-space: nowrap; }
     .ticker-track { display: inline-flex; gap: 30px; animation: scroll 40s linear infinite; }
-    .ticker-item { display: inline-flex; align-items: center; gap: 10px; font-size: 0.9rem; background: var(--bg-surface); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);}
-    .ticker-item .win { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; margin-right: 5px;}
+    .ticker-item { display: inline-flex; align-items: center; gap: 10px; font-size: 0.95rem; background: var(--bg-surface); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); font-weight: 500;}
+    .ticker-item .win { color: var(--accent); font-size: 0.85rem; text-transform: uppercase; font-weight: 700; margin-right: 5px;}
     @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
     /* Hero */
-    .hero { padding: 60px 40px; text-align: center; border-bottom: 1px solid var(--border); }
-    .hero h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 800; letter-spacing: -0.5px;}
+    .hero { padding: 60px 40px; text-align: center; border-bottom: 1px solid var(--border); background: radial-gradient(circle at center, #1a1a1a 0%, var(--bg-base) 100%); }
+    .hero h1 { font-size: 2.8rem; margin-bottom: 12px; font-weight: 700; letter-spacing: -0.5px;}
     .hero .accent { color: var(--accent); }
-    .hero-sub { color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; }
+    .hero-sub { color: var(--text-muted); margin-bottom: 35px; font-size: 1.2rem; font-weight: 400;}
+    
+    /* Search Bar styled with MyVepower gold focus */
     .search-wrap { max-width: 600px; margin: 0 auto; position: relative; }
-    .search-input { width: 100%; padding: 16px 20px 16px 50px; border-radius: 30px; border: 1px solid var(--border); background-color: var(--bg-surface); color: var(--text-main); font-size: 1rem; outline: none; }
-    .search-input:focus { border-color: var(--accent); }
+    .search-input { width: 100%; padding: 18px 24px 18px 50px; border-radius: 30px; border: 1px solid var(--border); background-color: var(--bg-surface); color: var(--text-main); font-size: 1.05rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; font-family: 'Fredoka', sans-serif;}
+    .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232, 185, 35, 0.15); }
+    .search-icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: var(--text-muted); }
 
     /* Grid Section */
     .games-section { padding: 40px; max-width: 1400px; margin: 0 auto; width: 100%; }
     .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .section-header h2 { font-size: 1.8rem; font-weight: 800; }
-    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+    .section-header h2 { font-size: 1.8rem; font-weight: 700; }
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
     
-    /* Game Card matching BetBuilderAI */
-    .game-card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column;}
-    .game-card:hover { transform: translateY(-3px); border-color: #3b4256; }
+    /* Game Card matching BetBuilderAI but styled for MyVepower */
+    .game-card { background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.2);}
+    .game-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 8px 25px rgba(0,0,0,0.4);}
     
-    .card-header { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); }
-    .card-week { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;}
-    .card-status { font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; font-weight: 700; background: var(--border); }
-    .card-status.final { background: #1e2230; color: var(--text-muted); }
+    .card-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); }
+    .card-week { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
+    .card-status { font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; font-weight: 600; background: var(--border); }
+    .card-status.final { background: #222; color: var(--text-muted); }
     .card-status.upcoming { background: var(--accent); color: #111; }
     
-    .card-body { padding: 24px 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+    .card-body { padding: 24px 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
     
-    .team-row { display: flex; align-items: center; justify-content: space-between; font-size: 1.25rem; font-weight: 700; }
-    .team-info { display: flex; align-items: center; gap: 12px; }
-    .team-logo-placeholder { width: 32px; height: 32px; border-radius: 50%; background: #2a3042; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; color: var(--text-muted); }
-    .team-score { font-size: 1.5rem; font-weight: 800; }
+    .team-row { display: flex; align-items: center; justify-content: space-between; font-size: 1.3rem; font-weight: 600; }
+    .team-info { display: flex; align-items: center; gap: 14px; }
     
-    .card-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
-    .btn-stats { display: block; width: 100%; text-align: center; background: transparent; border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: var(--text-main); font-weight: 600; text-decoration: none; transition: 0.2s; }
-    .btn-stats:hover { background: var(--bg-surface-hover); border-color: var(--text-muted); }
+    /* Logos changed to dark grey circles to match aesthetics */
+    .team-logo-placeholder { width: 36px; height: 36px; border-radius: 50%; background: #222; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); border: 1px solid #333;}
+    .team-score { font-size: 1.6rem; font-weight: 700; }
+    
+    .card-footer { padding: 18px 20px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.1);}
+    
+    /* Button explicitly styled using MyVepower fallback styles (Gold BG, #111 Text) */
+    .btn-stats { display: block; width: 100%; text-align: center; background: var(--accent); border: none; padding: 14px; border-radius: 10px; color: #111; font-weight: 600; font-size: 1.05rem; text-decoration: none; transition: 0.2s; font-family: 'Fredoka', sans-serif;}
+    .btn-stats:hover { background: #ffd036; transform: scale(1.02); }
 
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .main-content { margin-left: 0; }
+      .hero { padding: 40px 20px; }
+      .search-input { font-size: 1rem; }
     }
   </style>
 </head>
@@ -84,20 +100,16 @@
 
   <aside class="sidebar">
     <div class="sidebar-section">
-      <h3 style="color: var(--text-main); font-size: 1.5rem; font-weight: 800; margin-bottom: 40px; padding: 10px 12px;">BetBuilder<span style="color:var(--accent);">AI</span></h3>
+      <!-- Logo updated to MyVepower Style -->
+      <h3 style="color: var(--text-main); font-size: 1.8rem; font-weight: 700; margin-bottom: 40px; padding: 10px 12px; display:flex; align-items:center; gap:8px;">
+        <div style="width:24px; height:24px; background:var(--accent); border-radius:4px;"></div> MyVepower
+      </h3>
       
       <div class="sidebar-title">Explore</div>
       <ul class="sidebar-nav">
-        <li><a href="#" class="active">🏈 NFL Hub</a></li>
-        <li><a href="#">⚽ Soccer</a></li>
-        <li><a href="#">🏀 NBA</a></li>
-      </ul>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-title">Sweepstakes Actions</div>
-      <ul class="sidebar-nav">
-        <li><a href="#">Get Sweeps Coins</a></li>
-        <li><a href="#">Promotions</a></li>
+        <li><a href="#" class="active">🏈 NFL Sweepstakes</a></li>
+        <li><a href="#">🎰 Top Casinos</a></li>
+        <li><a href="#">🎁 Daily Bonuses</a></li>
       </ul>
     </div>
   </aside>
@@ -119,11 +131,12 @@
       </div>
     </div>
 
-    <!-- Hero Section mirroring BetBuilderAI -->
+    <!-- Hero Section mirroring BetBuilderAI but themed for MyVepower -->
     <div class="hero">
-      <h1>Your gameday <span class="accent" style="color: #6366f1;">command center</span></h1>
+      <h1>Your gameday <span class="accent">command center</span></h1>
       <p class="hero-sub">Pick your game, get the numbers, build smarter sweepstakes entries.</p>
       <div class="search-wrap">
+        <span class="search-icon">🔍</span>
         <input type="search" class="search-input" placeholder="Search teams, players or games...">
       </div>
     </div>
@@ -131,8 +144,8 @@
     <!-- Live Data Grid -->
     <div class="games-section">
       <div class="section-header">
-        <h2>Games</h2>
-        <span style="color: var(--text-muted); font-weight: 600;">{{ season }}</span>
+        <h2>Live NFL Games</h2>
+        <span style="color: var(--text-muted); font-weight: 500;">{{ season }}</span>
       </div>
 
       <div class="games-grid">
@@ -165,7 +178,7 @@
               </div>
               
               <div class="card-footer">
-                <a href="#" class="btn-stats">View Game Data & Props &rarr;</a>
+                <a href="#" class="btn-stats">View Game Data & Props</a>
               </div>
             </div>
             {% endfor %}
