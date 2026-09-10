@@ -200,6 +200,13 @@ def ai_analysis(request):
             if response.status_code == 200:
                 data = response.json()
                 ai_response_text = data['choices'][0]['message']['content']
+            elif response.status_code == 429:
+                ai_response_text = (
+                    "⚠️ **MyVepower AI is currently experiencing high traffic.**\n\n"
+                    "We have hit the Mistral API rate limit (429). If you are using a free-tier API key, "
+                    "you may have run out of credits or hit the requests-per-minute limit. "
+                    "Please wait a few seconds and try again, or upgrade your Mistral API billing plan."
+                )
             else:
                 ai_response_text = f"Mistral API Error ({response.status_code}): {response.text}"
         except Exception as e:
