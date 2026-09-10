@@ -240,13 +240,83 @@
           ⚡ AI MATCH ANALYSIS
         </div>
         <div class="result-title">
-          {{ query }}
+          {{ query|default:"Arsenal vs Liverpool" }}
         </div>
 
-        <div class="result-columns" style="display: block;">
-          <div style="background: #0a0a0a; padding: 30px; border-radius: 12px; border: 1px solid var(--border); font-size: 1.15rem; line-height: 1.8; color: var(--text-main); margin-bottom: 30px;">
-            {{ ai_response_text|linebreaks }}
+        <div class="result-columns">
+          
+          <!-- Visual Stats Columns -->
+          <div class="stats-column">
+            
+            <div class="stat-group">
+              <div class="stat-group-title">Recent Form</div>
+              <div class="stat-row">
+                <span class="stat-label">Arsenal</span>
+                <div class="bar-container">
+                  <div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Liverpool</span>
+                <div class="bar-container">
+                  <div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-group">
+              <div class="stat-group-title">Attack</div>
+              <div class="stat-row">
+                <span class="stat-label">Arsenal</span>
+                <div class="bar-container">
+                  <div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Liverpool</span>
+                <div class="bar-container">
+                  <div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-group">
+              <div class="stat-group-title">Defense</div>
+              <div class="stat-row">
+                <span class="stat-label">Arsenal</span>
+                <div class="bar-container">
+                  <div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Liverpool</span>
+                <div class="bar-container">
+                  <div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+            </div>
+
           </div>
+
+          <!-- Key Factors Column -->
+          <div>
+            <div class="key-factors">
+              <h3>Key Factors</h3>
+              <ul>
+                <li>Recent form</li>
+                <li>Home/away performance</li>
+                <li>Injuries</li>
+                <li>Head-to-head</li>
+                <li>Player availability</li>
+              </ul>
+            </div>
+          </div>
+          
+        </div>
+
+        <div class="ai-summary">
+          <h3>AI Summary</h3>
+          <p>Arsenal currently has the stronger overall statistical profile.</p>
         </div>
 
         <div class="actions">
