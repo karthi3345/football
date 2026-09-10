@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyVepower AI | Match Analysis</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0a0a0a; 
+      --bg-surface: #141414;
+      --bg-surface-hover: #1f1f1f;
+      --bg-sidebar: #050505;
+      --text-main: #f5f5f5;
+      --text-muted: #8b8b8b;
+      --accent: #e8b923;
+      --border: #222222;
+      --sidebar-width: 260px;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body { 
+      background-color: var(--bg-dark); 
+      color: var(--text-main); 
+      font-family: 'Fredoka', sans-serif; 
+      display: flex; 
+      min-height: 100vh; 
+      width: 100%;
+      overflow-x: hidden; 
+    }
+    
+    /* Sidebar */
+    .sidebar { 
+      width: var(--sidebar-width); 
+      background-color: var(--bg-sidebar); 
+      border-right: 1px solid var(--border); 
+      padding: 20px 0; 
+      position: fixed; 
+      top: 0; left: 0; bottom: 0;
+      overflow-y: auto; 
+      z-index: 10; 
+    }
+    
+    .sidebar-section { padding: 0 20px; margin-bottom: 30px; }
+    .sidebar-title { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; font-weight: 600; letter-spacing: 0.5px;}
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li { margin-bottom: 8px; }
+    .sidebar-nav a { 
+      color: var(--text-main); 
+      text-decoration: none; 
+      font-size: 1.05rem; 
+      display: flex; 
+      align-items: center; 
+      padding: 12px 14px; 
+      border-radius: 12px; 
+      transition: all 0.2s; 
+      font-weight: 500;
+    }
+    .sidebar-nav a:hover, .sidebar-nav a.active { background-color: var(--bg-surface-hover); color: var(--accent); }
+
+    .main-content { 
+      flex: 1; 
+      margin-left: var(--sidebar-width); 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center;
+      padding: 60px 20px;
+    }
+
+    .ai-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Hero */
+    .hero { text-align: center; margin-bottom: 40px; }
+    .hero h1 { font-size: 3rem; margin-bottom: 12px; font-weight: 800; letter-spacing: -1px;}
+    .hero .accent { color: var(--accent); }
+    .hero-sub { color: var(--text-muted); font-size: 1.2rem; font-weight: 500;}
+
+    /* Input Area */
+    .ai-form {
+      position: relative;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+    .ai-input {
+      width: 100%;
+      padding: 20px 140px 20px 24px;
+      border-radius: 16px;
+      border: 2px solid var(--border);
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 1.1rem;
+      outline: none;
+      transition: all 0.2s;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .ai-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(232, 185, 35, 0.15), 0 8px 20px rgba(0,0,0,0.3); }
+    .ai-submit {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      bottom: 10px;
+      background: var(--accent);
+      color: #111;
+      border: none;
+      padding: 0 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+      transition: 0.2s;
+    }
+    .ai-submit:hover { background: #ffd036; transform: scale(1.02); }
+
+    .ai-suggestions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 50px; }
+    .ai-suggestion-chip { background: var(--bg-surface); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; transition: 0.2s; text-decoration: none;}
+    .ai-suggestion-chip:hover { border-color: var(--accent); color: var(--text-main); }
+
+    /* Results Area */
+    .ai-result-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      animation: slideUp 0.4s ease-out;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .result-header { font-size: 1.2rem; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 10px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;}
+    .result-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border);}
+
+    /* Comparison Bars */
+    .stat-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .stat-label { width: 100px; font-weight: 600; font-size: 1.1rem; }
+    
+    /* Creating the visual blocks requested by user ████████░░ */
+    .bar-container { display: flex; gap: 4px; flex: 1; max-width: 200px; }
+    .bar-block { width: 16px; height: 16px; border-radius: 3px; background: #333; }
+    .bar-block.filled { background: var(--text-main); }
+    .bar-block.filled.accent { background: var(--accent); }
+
+    .stat-group { margin-bottom: 30px; }
+    .stat-group-title { font-size: 1rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;}
+
+    /* Two Column Layout for Results */
+    .result-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px;}
+    
+    /* Key Factors */
+    .key-factors { background: #0a0a0a; padding: 24px; border-radius: 12px; border: 1px solid var(--border); }
+    .key-factors h3 { font-size: 1.1rem; color: var(--accent); text-transform: uppercase; margin-bottom: 15px; font-weight: 800;}
+    .key-factors ul { list-style: none; }
+    .key-factors li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 1.05rem; color: var(--text-main); }
+    .key-factors li::before { content: '•'; color: var(--accent); font-size: 1.5rem; }
+
+    /* AI Summary */
+    .ai-summary { background: rgba(232, 185, 35, 0.1); border-left: 4px solid var(--accent); padding: 24px; border-radius: 0 12px 12px 0; margin-bottom: 30px;}
+    .ai-summary h3 { font-size: 1.1rem; color: var(--accent); margin-bottom: 10px; font-weight: 800; text-transform: uppercase;}
+    .ai-summary p { font-size: 1.2rem; line-height: 1.5; font-weight: 600; }
+
+    /* Action Buttons */
+    .actions { display: flex; gap: 16px; }
+    .btn { flex: 1; text-align: center; padding: 16px; border-radius: 12px; font-weight: 700; font-size: 1.1rem; text-decoration: none; transition: 0.2s; font-family: 'Fredoka', sans-serif; cursor: pointer;}
+    .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text-main); }
+    .btn-outline:hover { border-color: var(--text-muted); }
+    .btn-primary { background: var(--accent); border: 2px solid var(--accent); color: #111; }
+    .btn-primary:hover { background: #ffd036; border-color: #ffd036; transform: scale(1.02);}
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; padding: 30px 15px; }
+      .result-columns { grid-template-columns: 1fr; }
+      .actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <h3 style="color: var(--text-main); font-size: 1.8rem; font-weight: 700; margin-bottom: 40px; padding: 10px 12px; display:flex; align-items:center; gap:8px;">
+        <div style="width:24px; height:24px; background:var(--accent); border-radius:4px; flex-shrink: 0;"></div> 
+        MyVepower
+      </h3>
+      
+      <div class="sidebar-title">Sports</div>
+      <ul class="sidebar-nav">
+        <li><a href="/?sport=nfl">🏈 NFL Football</a></li>
+        <li><a href="/?sport=soccer">⚽ Soccer</a></li>
+        <li><a href="/?sport=nba">🏀 NBA Basketball</a></li>
+      </ul>
+      
+      <div class="sidebar-title" style="margin-top: 35px;">AI Tools</div>
+      <ul class="sidebar-nav">
+        <li><a href="/sports/ai/" class="active">🤖 MyVepower AI</a></li>
+      </ul>
+
+      <div class="sidebar-title" style="margin-top: 35px;">Explore</div>
+      <ul class="sidebar-nav">
+        <li><a href="/squads/">👥 All Squads & Teams</a></li>
+        <li><a href="/#players">📈 Player Props</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="ai-container">
+      
+      <div class="hero">
+        <h1>Ask MyVepower <span class="accent">AI</span></h1>
+        <p class="hero-sub">Get instant analytical breakdowns and smarter sweepstakes predictions.</p>
+      </div>
+
+      <form class="ai-form" method="GET" action="/sports/ai/">
+        <input type="text" name="q" class="ai-input" placeholder="e.g. Who looks stronger in Arsenal vs Liverpool?" value="{{ query|default:'' }}" required>
+        <button type="submit" class="ai-submit">Analyze</button>
+      </form>
+
+      {% if not show_result %}
+      <div class="ai-suggestions">
+        <a href="?q=Who looks stronger in Arsenal vs Liverpool?" class="ai-suggestion-chip">"Who looks stronger in Arsenal vs Liverpool?"</a>
+        <a href="?q=Compare these two NFL teams" class="ai-suggestion-chip">"Compare these two NFL teams."</a>
+        <a href="?q=Show me todays interesting matches" class="ai-suggestion-chip">"Show me today's interesting matches."</a>
+      </div>
+      {% endif %}
+
+      {% if show_result %}
+      <div class="ai-result-card">
+        <div class="result-header">
+          ⚡ AI MATCH ANALYSIS
+        </div>
+        <div class="result-title">
+          Arsenal vs Liverpool
+        </div>
+
+        <div class="result-columns">
+          
+          <!-- Visual Stats Columns -->
+          <div class="stats-column">
+            
+            <div class="stat-group">
+              <div class="stat-group-title">Recent Form</div>
+              <div class="stat-row">
+                <span class="stat-label">Arsenal</span>
+                <div class="bar-container">
+                  <div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Liverpool</span>
+                <div class="bar-container">
+                  <div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-group">
+              <div class="stat-group-title">Attack</div>
+              <div class="stat-row">
+                <span class="stat-label">Arsenal</span>
+                <div class="bar-container">
+                  <div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Liverpool</span>
+                <div class="bar-container">
+                  <div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-group">
+              <div class="stat-group-title">Defense</div>
+              <div class="stat-row">
+                <span class="stat-label">Arsenal</span>
+                <div class="bar-container">
+                  <div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block filled accent"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Liverpool</span>
+                <div class="bar-container">
+                  <div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block filled"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div><div class="bar-block"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Key Factors Column -->
+          <div>
+            <div class="key-factors">
+              <h3>Key Factors</h3>
+              <ul>
+                <li>Recent form</li>
+                <li>Home/away performance</li>
+                <li>Injuries</li>
+                <li>Head-to-head</li>
+                <li>Player availability</li>
+              </ul>
+            </div>
+          </div>
+          
+        </div>
+
+        <div class="ai-summary">
+          <h3>AI Summary</h3>
+          <p>Arsenal currently has the stronger overall statistical profile.</p>
+        </div>
+
+        <div class="actions">
+          <a href="#" class="btn btn-outline">[ VIEW MATCH ]</a>
+          <a href="#" class="btn btn-primary">[ BUILD SELECTION ]</a>
+        </div>
+
+      </div>
+      {% endif %}
+
+    </div>
+  </main>
+
+</body>
+</html>

@@ -164,3 +164,14 @@ def squads(request):
         'filters': ['ALL', 'MLS', 'EPL', 'LALIGA', 'SERIE A', 'BUNDES', 'LIGUE 1', 'CHAMP', 'UCL', 'UEL']
     }
     return render(request, 'sportsbook/squads.html', context)
+
+def ai_analysis(request):
+    # If the user submitted a query, we show the mock analysis
+    query = request.GET.get('q', '')
+    show_result = bool(query)
+    
+    context = {
+        'query': query,
+        'show_result': show_result
+    }
+    return render(request, 'sportsbook/ai_analysis.html', context)
