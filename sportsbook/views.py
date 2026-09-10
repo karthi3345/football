@@ -1,36 +1,73 @@
 import requests
 from django.shortcuts import render
 
-def home(request):
+def fetch_espn_data(sport_code):
     """
-    Fetches the real NFL live data from the BetBuilder API
-    and displays it exactly like the gambling.com/betbuilderai/nfl interface.
+    Fetches 100% FREE live data from ESPN's public hidden API.
+    No API keys required.
     """
-    api_url = 'https://www.gambling.com/betbuilderai/api/nfl/games?recent=12&type=all'
-    headers = {'User-Agent': 'Mozilla/5.0'}
+    endpoints = {
+        'nfl': 'football/nfl',
+        'nba': 'basketball/nba',
+        'mlb': 'baseball/mlb',
+        'nhl': 'hockey/nhl',
+        'soccer': 'soccer/eng.1' # English Premier League
+    }
+    
+    path = endpoints.get(sport_code, 'football/nfl')
+    api_url = f'https://site.api.espn.com/apis/site/v2/sports/{path}/scoreboard'
     
     try:
-        response = requests.get(api_url, headers=headers, timeout=5)
+        response = requests.get(api_url, timeout=5)
         data = response.json()
-        raw_games = data.get('games', [])
+        events = data.get('events', [])
         
         games = []
-        for g in raw_games:
+        for event in events:
+            comp = event['competitions'][0]
+            status_desc = event['status']['type']['description'] # e.g. "Final", "Scheduled"
+            
+            team1 = comp['competitors'][0]
+            team2 = comp['competitors'][1]
+            
+            home_team = team1 if team1['homeAway'] == 'home' else team2
+            away_team = team1 if team1['homeAway'] == 'away' else team2
+            
             games.append({
-                'home_team': g.get('home_team'),
-                'home_abbr': g.get('home_abbr'),
-                'away_team': g.get('away_team'),
-                'away_abbr': g.get('away_abbr'),
-                'home_score': g.get('home_score', '-'),
-                'away_score': g.get('away_score', '-'),
-                'status': 'Final' if g.get('status') == 'completed' else 'Upcoming',
-                'week': f"Week {g.get('week')}" if g.get('week') else g.get('season_type')
+                'home_team': home_team['team']['displayName'],
+                'home_abbr': home_team['team']['abbreviation'],
+                'home_score': home_team.get('score', '-'),
+                'away_team': away_team['team']['displayName'],
+                'away_abbr': away_team['team']['abbreviation'],
+                'away_score': away_team.get('score', '-'),
+                'status': 'Final' if 'Final' in status_desc else ('Upcoming' if 'Scheduled' in status_desc else 'Live'),
+                'week': event.get('shortName', 'Game')
             })
+        return games
     except Exception as e:
-        games = []
+        print(f"ESPN API Error: {e}")
+        return []
+
+def home(request):
+    # Make the website completely dynamic! Read the sport from the URL (e.g., ?sport=nba)
+    # Defaults to 'nfl' if nothing is selected.
+    selected_sport = request.GET.get('sport', 'nfl')
+    
+    # Fetch data dynamically using the free ESPN API
+    games = fetch_espn_data(selected_sport)
+
+    # Dictionary to set titles properly in the HTML
+    titles = {
+        'nfl': '🏈 NFL Football',
+        'nba': '🏀 NBA Basketball',
+        'soccer': '⚽ Premier League Soccer',
+        'mlb': '⚾ MLB Baseball',
+        'nhl': '🏒 NHL Hockey'
+    }
 
     context = {
         'games': games,
-        'season': '2026 NFL Season'
+        'current_sport': selected_sport,
+        'season': titles.get(selected_sport, 'Live Sports')
     }
     return render(request, 'sportsbook/home.html', context)

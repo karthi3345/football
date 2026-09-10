@@ -221,11 +221,11 @@
       
       <div class="sidebar-title">Sports</div>
       <ul class="sidebar-nav">
-        <li><a href="#" class="active">🏈 NFL Football</a></li>
-        <li><a href="#">⚽ Soccer</a></li>
-        <li><a href="#">🏀 NBA Basketball</a></li>
-        <li><a href="#">⚾ MLB Baseball</a></li>
-        <li><a href="#">🏒 NHL Hockey</a></li>
+        <li><a href="?sport=nfl" class="{% if current_sport == 'nfl' %}active{% endif %}">🏈 NFL Football</a></li>
+        <li><a href="?sport=soccer" class="{% if current_sport == 'soccer' %}active{% endif %}">⚽ Soccer</a></li>
+        <li><a href="?sport=nba" class="{% if current_sport == 'nba' %}active{% endif %}">🏀 NBA Basketball</a></li>
+        <li><a href="?sport=mlb" class="{% if current_sport == 'mlb' %}active{% endif %}">⚾ MLB Baseball</a></li>
+        <li><a href="?sport=nhl" class="{% if current_sport == 'nhl' %}active{% endif %}">🏒 NHL Hockey</a></li>
       </ul>
     </div>
   </aside>
