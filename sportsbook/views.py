@@ -33,12 +33,17 @@ def fetch_espn_data(sport_code):
             home_team = team1 if team1['homeAway'] == 'home' else team2
             away_team = team1 if team1['homeAway'] == 'away' else team2
             
+            home_team_info = home_team['team']
+            away_team_info = away_team['team']
+            
             games.append({
-                'home_team': home_team['team']['displayName'],
-                'home_abbr': home_team['team']['abbreviation'],
+                'home_team': home_team_info.get('displayName', 'Unknown'),
+                'home_abbr': home_team_info.get('abbreviation', 'TBD'),
+                'home_logo': home_team_info.get('logo', ''),
                 'home_score': home_team.get('score', '-'),
-                'away_team': away_team['team']['displayName'],
-                'away_abbr': away_team['team']['abbreviation'],
+                'away_team': away_team_info.get('displayName', 'Unknown'),
+                'away_abbr': away_team_info.get('abbreviation', 'TBD'),
+                'away_logo': away_team_info.get('logo', ''),
                 'away_score': away_team.get('score', '-'),
                 'status': 'Final' if 'Final' in status_desc else ('Upcoming' if 'Scheduled' in status_desc else 'Live'),
                 'week': event.get('shortName', 'Game')
