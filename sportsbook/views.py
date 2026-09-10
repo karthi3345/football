@@ -165,13 +165,50 @@ def squads(request):
     }
     return render(request, 'sportsbook/squads.html', context)
 
+import json
+
 def ai_analysis(request):
     query = request.GET.get('q', '')
     show_result = bool(query)
+    ai_response_text = ""
     
+    if show_result:
+        api_key = "eurbdGGettP6b9tUBqgPC5sgxFuoRHeH"
+        url = "https://api.mistral.ai/v1/chat/completions"
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": f"Bearer {api_key}"
+        }
+        payload = {
+            "model": "mistral-small-latest",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "You are MyVepower AI, an elite sports intelligence assistant. Provide a concise, analytical response highlighting key factors, form, and a final summary. DO NOT use markdown formatting like asterisks (*) or hashtags (#). Use plain text and standard bullet points (-)."
+                },
+                {
+                    "role": "user",
+                    "content": query
+                }
+            ],
+            "temperature": 0.7
+        }
+        
+        try:
+            response = requests.post(url, headers=headers, json=payload, timeout=12)
+            if response.status_code == 200:
+                data = response.json()
+                ai_response_text = data['choices'][0]['message']['content']
+            else:
+                ai_response_text = f"Mistral API Error ({response.status_code}): {response.text}"
+        except Exception as e:
+            ai_response_text = f"Connection error: {str(e)}"
+            
     context = {
         'query': query,
-        'show_result': show_result
+        'show_result': show_result,
+        'ai_response_text': ai_response_text
     }
     return render(request, 'sportsbook/ai_analysis.html', context)
 
