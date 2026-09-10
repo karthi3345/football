@@ -166,7 +166,6 @@ def squads(request):
     return render(request, 'sportsbook/squads.html', context)
 
 def ai_analysis(request):
-    # If the user submitted a query, we show the mock analysis
     query = request.GET.get('q', '')
     show_result = bool(query)
     
@@ -175,3 +174,8 @@ def ai_analysis(request):
         'show_result': show_result
     }
     return render(request, 'sportsbook/ai_analysis.html', context)
+
+def match_centre(request):
+    # Mock data for Arsenal vs Liverpool Match Centre
+    context = {}
+    return render(request, 'sportsbook/match_centre.html', context)
