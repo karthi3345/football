@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soccer Squads & Fixtures</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #090c11;
+      --bg-sidebar: #0b0e14;
+      --bg-card: #11151c;
+      --bg-card-hover: #161b24;
+      --bg-input: #10141b;
+      
+      --text-muted: #6e7687;
+      --text-main: #9ba3b5;
+      --text-white: #ffffff;
+      
+      --accent-green: #00ff9d;
+      --accent-red: #ff2e55;
+      --border: #1a1f2b;
+      
+      --font-sans: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* === SIDEBAR === */
+    .sidebar {
+      width: 320px;
+      background-color: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: fixed;
+      top: 0; left: 0;
+      overflow-y: auto;
+      z-index: 10;
+    }
+    
+    .sb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 25px;
+    }
+    .sb-title { font-weight: 800; font-size: 1rem; letter-spacing: 1.5px; color: var(--text-white); }
+    .sb-count { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); font-weight: 600;}
+    
+    .sb-section-title { 
+      font-size: 0.75rem; font-weight: 800; color: var(--text-muted); 
+      letter-spacing: 1px; margin-bottom: 20px; text-transform: uppercase;
+    }
+    
+    .league-list { 
+      list-style: none; margin-bottom: 35px; 
+      border-bottom: 1px solid var(--border); padding-bottom: 25px;
+    }
+    
+    .league-item { 
+      display: flex; justify-content: space-between; align-items: center; 
+      padding: 12px 0; cursor: pointer; transition: 0.2s;
+    }
+    .league-name { 
+      font-weight: 700; font-size: 0.9rem; color: var(--text-muted); 
+      text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.2s;
+    }
+    .league-badge { 
+      background: #141922; padding: 4px 8px; border-radius: 6px; 
+      font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; 
+      color: var(--text-muted); transition: 0.2s;
+    }
+    
+    .league-item:hover .league-name { color: var(--text-white); }
+    .league-item.active .league-name { color: var(--accent-green); }
+    .league-item.active .league-badge { background: rgba(0, 255, 157, 0.1); color: var(--accent-green); }
+
+    /* Forms */
+    .search-box { margin-bottom: 30px; }
+    .input-field, .select-field { 
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border); 
+      color: var(--text-white); padding: 14px 16px; border-radius: 8px; 
+      font-size: 0.9rem; font-family: var(--font-sans); font-weight: 500;
+      outline: none; transition: 0.2s;
+    }
+    .input-field:focus, .select-field:focus { border-color: var(--text-muted); }
+    .select-field { appearance: none; cursor: pointer; }
+
+    /* === MAIN CONTENT === */
+    .main-content {
+      margin-left: 320px;
+      flex: 1;
+      padding: 40px 60px;
+      max-width: 900px;
+    }
+
+    /* Back Button */
+    .back-btn { display: inline-block; margin-bottom: 30px; color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.2s; }
+    .back-btn:hover { color: var(--text-white); }
+
+    .main-header { 
+      font-size: 1rem; font-weight: 800; letter-spacing: 1.5px; 
+      color: var(--text-muted); text-transform: uppercase; 
+      margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 25px;
+    }
+    .main-header span { color: var(--accent-red); }
+
+    .filters-title { 
+      font-size: 0.85rem; font-weight: 800; color: var(--text-muted); 
+      letter-spacing: 1px; margin-bottom: 20px; text-transform: uppercase; 
+    }
+    
+    .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 45px; }
+    .filter-chip { 
+      background: transparent; border: 1px solid var(--border); 
+      color: var(--text-muted); font-weight: 700; font-size: 0.8rem; 
+      padding: 10px 16px; border-radius: 8px; cursor: pointer; 
+      transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .filter-chip:hover { border-color: var(--text-muted); color: var(--text-white); }
+    .filter-chip.active { 
+      border-color: var(--accent-red); color: var(--accent-red); 
+      background: rgba(255, 46, 85, 0.08); 
+    }
+
+    .date-divider { 
+      font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; 
+      color: var(--text-muted); margin-bottom: 20px; text-transform: uppercase; 
+      letter-spacing: 1px;
+    }
+
+    /* === FIXTURE CARDS === */
+    .fixture-card { 
+      background: var(--bg-card); border-radius: 12px; padding: 20px 24px; 
+      margin-bottom: 16px; border: 1px solid transparent; transition: 0.2s; 
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .fixture-card:hover { background: var(--bg-card-hover); border-color: var(--border); cursor: pointer;}
+    
+    .fc-header { display: flex; justify-content: space-between; align-items: center; }
+    .fc-league { 
+      border: 1px solid var(--accent-red); color: var(--accent-red); 
+      background: rgba(255, 46, 85, 0.08); font-size: 0.65rem; 
+      font-weight: 800; padding: 4px 8px; border-radius: 4px; 
+      font-family: var(--font-mono); letter-spacing: 0.5px;
+    }
+    .fc-time { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; }
+
+    .fc-teams { display: flex; flex-direction: column; gap: 14px; }
+    .fc-team { display: flex; align-items: center; gap: 16px; }
+    .fc-logo { width: 28px; height: 28px; border-radius: 50%; background: #fff; object-fit: contain; padding: 2px;}
+    .fc-name { font-size: 1.05rem; font-weight: 700; color: var(--text-white); letter-spacing: -0.2px;}
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; padding: 30px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sb-header">
+      <div class="sb-title">CLUBS</div>
+      <div class="sb-count">150 clubs</div>
+    </div>
+
+    <div class="sb-section-title">LEAGUE</div>
+    <ul class="league-list">
+      {% for league in leagues %}
+      <li class="league-item {% if league.active %}active{% endif %}">
+        <div class="league-name">{{ league.name }}</div>
+        <div class="league-badge">{{ league.count }}</div>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <div class="search-box">
+      <div class="sb-section-title">SEARCH</div>
+      <input type="text" class="input-field" placeholder="Search club...">
+    </div>
+
+    <div class="sort-box">
+      <div class="sb-section-title">SORT</div>
+      <select class="select-field">
+        <option>Table position</option>
+        <option>Alphabetical</option>
+      </select>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    
+    <a href="/" class="back-btn">&larr; Back to Main Sportsbook</a>
+
+    <div class="main-header">
+      NEXT MATCHDAY <span style="margin: 0 10px; color: var(--text-muted)">•</span> <span>SUN 13 SEPT</span>
+    </div>
+
+    <div class="filters-title">ALL FIXTURES</div>
+    <div class="filters">
+      {% for filter in filters %}
+        <button class="filter-chip {% if filter == 'ALL' %}active{% endif %}">{{ filter }}</button>
+      {% endfor %}
+    </div>
+
+    <div class="date-divider">SUN 13 SEPT</div>
+
+    <div class="fixtures-list">
+      {% for match in fixtures %}
+      <div class="fixture-card">
+        <div class="fc-header">
+          <div class="fc-league">{{ match.league }}</div>
+          <div class="fc-time">{{ match.time }}</div>
+        </div>
+        
+        <div class="fc-teams">
+          <div class="fc-team">
+            <img src="{{ match.home_logo }}" alt="{{ match.home_team }}" class="fc-logo">
+            <div class="fc-name">{{ match.home_team }}</div>
+          </div>
+          <div class="fc-team">
+            <img src="{{ match.away_logo }}" alt="{{ match.away_team }}" class="fc-logo">
+            <div class="fc-name">{{ match.away_team }}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </main>
+
+</body>
+</html>

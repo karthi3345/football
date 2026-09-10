@@ -110,3 +110,57 @@ def home(request):
         'season': titles.get(selected_sport, 'Live Sports')
     }
     return render(request, 'sportsbook/home.html', context)
+
+def squads(request):
+    leagues = [
+        {'name': 'ALL', 'count': 150, 'active': False},
+        {'name': 'MLS', 'count': 30, 'active': True},
+        {'name': 'PREMIER LEAGUE', 'count': 20, 'active': False},
+        {'name': 'LA LIGA', 'count': 20, 'active': False},
+        {'name': 'SERIE A', 'count': 20, 'active': False},
+        {'name': 'BUNDESLIGA', 'count': 18, 'active': False},
+        {'name': 'LIGUE 1', 'count': 18, 'active': False},
+        {'name': 'CHAMPIONSHIP', 'count': 24, 'active': False},
+    ]
+
+    fixtures = [
+        {
+            'league': 'MLS',
+            'time': '05:00 GMT+5:30',
+            'home_team': 'Orlando City SC',
+            'home_logo': 'https://a.espncdn.com/i/teamlogos/soccer/500/10450.png',
+            'away_team': 'Toronto FC',
+            'away_logo': 'https://a.espncdn.com/i/teamlogos/soccer/500/7318.png',
+        },
+        {
+            'league': 'MLS',
+            'time': '05:00 GMT+5:30',
+            'home_team': 'Columbus Crew',
+            'home_logo': 'https://a.espncdn.com/i/teamlogos/soccer/500/182.png',
+            'away_team': 'New York Red Bulls',
+            'away_logo': 'https://a.espncdn.com/i/teamlogos/soccer/500/190.png',
+        },
+        {
+            'league': 'MLS',
+            'time': '05:00 GMT+5:30',
+            'home_team': 'DC United',
+            'home_logo': 'https://a.espncdn.com/i/teamlogos/soccer/500/183.png',
+            'away_team': 'Atlanta United FC',
+            'away_logo': 'https://a.espncdn.com/i/teamlogos/soccer/500/18230.png',
+        },
+        {
+            'league': 'MLS',
+            'time': '05:00 GMT+5:30',
+            'home_team': 'FC Cincinnati',
+            'home_logo': 'https://a.espncdn.com/i/teamlogos/soccer/500/18204.png',
+            'away_team': 'Charlotte FC',
+            'away_logo': 'https://a.espncdn.com/i/teamlogos/soccer/500/21577.png',
+        }
+    ]
+
+    context = {
+        'leagues': leagues,
+        'fixtures': fixtures,
+        'filters': ['ALL', 'MLS', 'EPL', 'LALIGA', 'SERIE A', 'BUNDES', 'LIGUE 1', 'CHAMP', 'UCL', 'UEL']
+    }
+    return render(request, 'sportsbook/squads.html', context)
